@@ -3,7 +3,7 @@ import { useGetConversationByIdQuery } from 'librechat-data-provider';
 import { useState, useEffect } from 'react';
 import { useSetRecoilState } from 'recoil';
 import copy from 'copy-to-clipboard';
-import { Plugin, SubRow, MessageContent } from './Content';
+import { SubRow, Plugin, MessageContent } from './Content';
 // eslint-disable-next-line import/no-cycle
 import MultiMessage from './MultiMessage';
 import HoverButtons from './HoverButtons';
@@ -11,6 +11,7 @@ import SiblingSwitch from './SiblingSwitch';
 import { getIcon } from '~/components/Endpoints';
 import { useMessageHandler } from '~/hooks';
 import type { TMessageProps } from '~/common';
+import { cn } from '~/utils';
 import store from '~/store';
 
 export default function Message({
@@ -36,7 +37,7 @@ export default function Message({
     error,
     unfinished,
   } = message ?? {};
-  const last = !children?.length;
+  const isLast = !children?.length;
   const edit = messageId == currentEditId;
   const getConversationQuery = useGetConversationByIdQuery(message?.conversationId ?? '', {
     enabled: false,
@@ -58,10 +59,10 @@ export default function Message({
   useEffect(() => {
     if (!message) {
       return;
-    } else if (last) {
+    } else if (isLast) {
       setLatestMessage({ ...message });
     }
-  }, [last, message]);
+  }, [isLast, message]);
 
   if (!message) {
     return null;
@@ -78,9 +79,14 @@ export default function Message({
     }
   };
 
+  const commonClasses =
+    'w-full border-b text-gray-800 group border-black/10 dark:border-gray-900/50 dark:text-gray-100';
+  const uniqueClasses = isCreatedByUser
+    ? 'bg-white dark:bg-gray-800 dark:text-gray-20'
+    : 'bg-gray-50 dark:bg-gray-1000 dark:text-gray-70';
+
   const props = {
-    className:
-      'w-full border-b border-black/10 dark:border-gray-900/50 text-gray-800 bg-white dark:text-gray-100 group dark:bg-gray-800',
+    className: cn(commonClasses, uniqueClasses),
     titleclass: '',
   };
 
@@ -89,11 +95,6 @@ export default function Message({
     ...message,
     model: message?.model ?? conversation?.model,
   });
-
-  if (!isCreatedByUser) {
-    props.className =
-      'w-full border-b border-black/10 bg-gray-50 dark:border-gray-900/50 text-gray-800 dark:text-gray-100 group bg-gray-100 dark:bg-gray-1000';
-  }
 
   if (message?.bg && searchResult) {
     props.className = message?.bg?.split('hover')[0];
@@ -159,16 +160,18 @@ export default function Message({
               </SubRow>
             )}
             <div className="flex flex-grow flex-col gap-3">
+              {/* Legacy Plugins */}
               {message?.plugin && <Plugin plugin={message?.plugin} />}
               <MessageContent
                 ask={ask}
-                text={text ?? ''}
                 edit={edit}
-                error={error ?? false}
+                isLast={isLast}
+                text={text ?? ''}
                 message={message}
                 enterEdit={enterEdit}
-                unfinished={unfinished ?? false}
+                error={error ?? false}
                 isSubmitting={isSubmitting}
+                unfinished={unfinished ?? false}
                 isCreatedByUser={isCreatedByUser ?? true}
                 siblingIdx={siblingIdx ?? 0}
                 setSiblingIdx={

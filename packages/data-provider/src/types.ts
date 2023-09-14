@@ -1,4 +1,7 @@
 import type { TResPlugin, TMessage, TConversation, TEndpointOption } from './schemas';
+import type { UseMutationResult } from '@tanstack/react-query';
+
+export type TMutation = UseMutationResult<unknown>;
 
 export * from './schemas';
 
@@ -8,6 +11,7 @@ export type TMessagesAtom = TMessages | null;
 
 export type TSubmission = {
   plugin?: TResPlugin;
+  plugins?: TResPlugin[];
   message: TMessage;
   isEdited?: boolean;
   isContinued?: boolean;
@@ -66,6 +70,12 @@ export type TUpdateMessageRequest = {
   conversationId: string;
   messageId: string;
   text: string;
+};
+
+export type TUpdateUserKeyRequest = {
+  name: string;
+  value: string;
+  expiresAt: string;
 };
 
 export type TUpdateConversationRequest = {
@@ -174,6 +184,10 @@ export type TStartupConfig = {
 export type TRefreshTokenResponse = {
   token: string;
   user: TUser;
+};
+
+export type TCheckUserKeyResponse = {
+  expiresAt: string;
 };
 
 export type TRequestPasswordResetResponse = {

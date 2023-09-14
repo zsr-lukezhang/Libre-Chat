@@ -55,6 +55,10 @@ const messageSchema = mongoose.Schema(
       required: true,
       default: false,
     },
+    isEdited: {
+      type: Boolean,
+      default: false,
+    },
     unfinished: {
       type: Boolean,
       default: false,
@@ -90,6 +94,7 @@ const messageSchema = mongoose.Schema(
         required: false,
       },
     },
+    plugins: [{ type: mongoose.Schema.Types.Mixed }],
   },
   { timestamps: true },
 );

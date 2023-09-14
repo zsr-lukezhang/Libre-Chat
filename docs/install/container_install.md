@@ -31,7 +31,7 @@ podman build \
     --file ./LibreChat/Dockerfile;
 ```
 
-> Not the downside of running a base container that has a live root is that image revisions need to be done manually. The easiest way is to remove and recreate the image when the container is no longer. If that's not possible for you, manually updating the image to increment versions can be done manually. Simply amend $image with the version you're building.
+> Note: the downside of running a base container that has a live root is that image revisions need to be done manually. The easiest way is to remove and recreate the image when the container is no longer. If that's not possible for you, manually updating the image to increment versions can be done manually. Simply amend $image with the version you're building.
 
 > We'll document how to go about the update process more effectively further on. You wont need to remove your existing containers, or lose any data when updating.
 
@@ -216,3 +216,7 @@ podman run \
 # Stop the container (if it's confirmed to be running) and restart the service
 podman stop librechat && systemctl --user start container-librechat
 ```
+
+---
+
+>⚠️ Note: If you're having trouble, before creating a new issue, please search for similar ones on our [#issues thread on our discord](https://discord.gg/weqZFtD9C4) or our [troubleshooting discussion](https://github.com/danny-avila/LibreChat/discussions/categories/troubleshooting) on our Discussions page. If you don't find a relevant issue, feel free to create a new one and provide as much detail as possible.
